@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 class = "logo">
+            Nahar group
+        </h1>
+        <nav class="navigation">
+            <a href="#">Home</a>
+            <a href="#">About Us</a>
+        </nav>
+
+    </header>
+
+    <div class="container">
+    <form id="userForm">
+        <h2>User Data</h2>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    
+        <label>Gender:</label>
+        <input type="radio" id="male" name="gender" value="male" required>
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">Female</label>
+        <br>
+    
+        <label for="skills">Skills:</label>
+        <select id="skills" name="skills">
+          <option value="JS">JS</option>
+          <option value="React">React</option>
+          <option value="API">API</option>
+          <option value="Backend">Backend</option>
+        </select>
+    
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+
+    <footer>
+        <nav>
+          <a href="#">Home</a>
+          <a href="#">About us</a>
+        </nav>
+      </footer>
+      
+      <script>
+          document.getElementById("userForm").addEventListener("submit", function(event) {
+              event.preventDefault();
+              alert("You're logged in successfully");
+            });
+        </script>
+    </body>
+</html>
