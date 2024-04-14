@@ -1,16 +1,10 @@
 import pymongo
 import json
-
-
 with open("uploads/citations.txt", "r", encoding="mbcs") as my_file:
     data = my_file.readlines()
 
-
 article_list = []
-
-
 art = 0  
-
 
 for line in data:
    
@@ -25,7 +19,6 @@ for line in data:
         if art:  
             article_list.append(one_article)
             art = 0  
-
    
     elif art == 1:
     
@@ -36,6 +29,11 @@ for line in data:
                 one_article[0] = value
             elif key.startswith("author"):
                 one_article[1] = [author.strip() for author in value.split('and')]
+                for a in range(0,len(one_article[1])):
+                    one_article[1][a] = one_article[1][a].replace(",", "")
+                    one_article[1][a] = one_article[1][a] + ", Professor, Active"
+                   
+                print(one_article[1])
             elif key.startswith("journal") or key.startswith("booktitle"):
                 one_article[2] = value
             elif key.startswith("volume"):
@@ -53,10 +51,7 @@ for line in data:
 if art:
     article_list.append(one_article)
 
-
-
-# print(article_list)
-    
+# print(article_list)    
 
 def convert_data_corrected(data):
     converted = []  # List to hold converted data
@@ -79,30 +74,20 @@ def convert_data_corrected(data):
     return converted
 
 import json
-# data = ["Using immersive video to evaluate future traveller information systems", ["Guo, Amy Weihong", "Blythe, Phil", "Olivier, Patrick", "Singh, Pushpendra", "Nam, Ha", "others"], "IET Intelligent Transport Systems", None, None, "2008", "Newcastle University", None], ["A study of existing Ontologies in the IoT-domain", ["Bajaj, Garvita", "Agarwal, Rachit", "Singh, Pushpendra", "Georgantas, Nikolaos", "Issarny, Valerie"], "arXiv preprint arXiv:1707.00112", None, None, "2017", None, None]
+data = ["Using immersive video to evaluate future traveller information systems", ["Guo, Amy Weihong", "Blythe, Phil", "Olivier, Patrick", "Singh, Pushpendra", "Nam, Ha", "others"], "IET Intelligent Transport Systems", None, None, "2008", "Newcastle University", None], ["A study of existing Ontologies in the IoT-domain", ["Bajaj, Garvita", "Agarwal, Rachit", "Singh, Pushpendra", "Georgantas, Nikolaos", "Issarny, Valerie"], "arXiv preprint arXiv:1707.00112", None, None, "2017", None, None]
 
 converted_data_corrected = convert_data_corrected(article_list)
 converted_data_json_format_corrected = "\n".join([str(entry) + "," for entry in converted_data_corrected])  # For display purposes
-print(converted_data_json_format_corrected)
+# print(converted_data_json_format_corrected)
 
 # print(convert_data(data))
 
-
-
-
-
-
-
-
 filename = 'converted_data.json'
-
 
 with open(filename, 'w') as file:
     json.dump(converted_data_corrected, file, indent=4)    
-
 with open(filename, 'r') as file:
         data = json.load(file)
-
 
 # MongoDB connection settings
 mongo_client = pymongo.MongoClient("mongodb://localhost:27017/")

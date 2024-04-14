@@ -1,4 +1,15 @@
-var express = require("express")
+require('dotenv').config()
+// const Customer = require('./server/models/Customer')
+const express = require('express')
+const expressLayout = require('express-ejs-layouts')
+const connectDB = require('./server/config/db')
+// const {flash}= require('express-flash-message')
+flash = require('express-flash')
+const session= require('express-session')
+
+const app = express()
+const port = 5000 || process.env.PORT
+
 var bodyParser = require("body-parser")
 var mongoose = require("mongoose")
 const path = require('path')
@@ -10,54 +21,67 @@ const methodOverride = require('method-override')
 const fs = require('fs')
 const { spawn } = require('child_process');
 
-const app=express()
 app.use(bodyParser.json())
 app.use(methodOverride('_method'))
 app.use(express.static('public'))
-app.use(bodyParser.urlencoded({
-    extended:true
-}
-))
+app.use(bodyParser.urlencoded({extended:true}))
+
+const { ObjectId } = require('mongodb');
 
 
+
+
+
+
+// Connect to database
+connectDB()
+
+app.use(express.urlencoded({extended: true}))
+app.use(express.json())
+
+;
+// Static files
+app.use(express.static('public'))
+
+
+//Express Session
+app.use(
+    session({
+        secret:'secret',
+        resave: false,
+        saveUninitialized:true,
+        cookie: {
+            maxAge: 1000*60*60*24*7,// 1 week
+        }
+    })
+)
+
+//Flash Messages
+app.use(flash({sessionKeyName: 'flashMessage'}))
+
+
+
+// Templating Engine
+app.use(expressLayout)
+app.set('layout',"./layouts/main")
 app.set('view engine','ejs')
 
-const mongoURI = 'mongodb://localhost:27017/irdBtp'
-const conn =mongoose.createConnection(mongoURI)
-mongoose.connect(mongoURI)
+
+// const mongoURI = 'mongodb://localhost:27017/irdBtp'
+        // const conn =mongoose.createConnection(mongoURI)
+        // mongoose.connect(mongoURI)
 var db = mongoose.connection
 db.on('error',()=> console.log("Error in connecting to Database"))
-db.once('open',()=>console.log("Connected to Database"))
+db.once('open',()=>console.log("Connected to Database12"))
 
-// let gfs;
+//Routes
+app.use('/', require('./server/routes/customer'))
 
-// conn.once('open',() =>{
-//     //Init stream
-//     gfs = Grid(conn.db,mongoose.mongo)
-//     gfs.collection('uploads')
-// })
+// Handle 404
+app.get('*', (req, res) =>{
+    res.status(404).render('404')
+})
 
-// // Create storage engine
-// const storage = new GridFsStorage({
-//     url: mongoURI,
-//     file: (req, file) => {
-//       return new Promise((resolve, reject) => {
-//         crypto.randomBytes(16, (err, buf) => {
-//           if (err) {
-//             return reject(err);
-//           }
-//           const filename = buf.toString('hex') + path.extname(file.originalname);
-//           const fileInfo = {
-//             filename: filename,
-//             bucketName: 'uploads'
-//           };
-//           resolve(fileInfo);
-//         });
-//       });
-//     }
-//   });
-
-// const upload = multer({ storage });
 
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
@@ -82,7 +106,7 @@ app.post("/sign_upp",upload.single('file'), (req,res)=>{
         
         // const destinationPath = path.join(__dirname, 'uploads', file.originalname);
         // fs.rename(file.path, destinationPath) 
-        const pythonProcess = spawn('python', ['uploads/main.py', file.originalname]);
+        const pythonProcess = spawn('python', ['uploads/main12.py', file.originalname]);
         pythonProcess.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
         });
@@ -93,27 +117,8 @@ app.post("/sign_upp",upload.single('file'), (req,res)=>{
 })
 
 app.post("/sign_upp1",upload.single('file'), (req,res)=>{
-    // const file =req.file
-    // if(file){
-    //     // return res.status(400).send('No file uploaded.');
     
-    //     // Save file information or perform other operations
-    //     console.log('File uploaded:', file.filename);
-        
-    //     // const destinationPath = path.join(__dirname, 'uploads', file.originalname);
-    //     // fs.rename(file.path, destinationPath) 
-    //     const pythonProcess = spawn('python', ['uploads/main.py', file.originalname]);
-    //     pythonProcess.stdout.on('data', (data) => {
-    //         console.log(`stdout: ${data}`);
-    //     });
-    //     pythonProcess.stderr.on('data', (data) => {
-    //         console.error(`stderr: ${data}`);
-    //     });
-    //     res.send('File uploaded successfully.');
-    // }
-
-
-
+    
     var Title = req.body.Title
     var Authors = req.body.Authors
     var Journal = req.body.Journal
@@ -130,17 +135,25 @@ app.post("/sign_upp1",upload.single('file'), (req,res)=>{
     var AuthorStatuses = req.body.authorStatus;
 
     // Combine Author names, types, and statuses into an array of objects
-    var AuthorsData = AuthorNames.map((name, index) => {
-        return {
-            name: name,
-            type: AuthorTypes[index],
-            status: AuthorStatuses[index]
-        };
-    });
-
+        // Combine Author names, types, and statuses into an array of objects
+        var AuthorsData = [];
+        for (var i = 0; i < AuthorNames.length; i++) {
+            AuthorsData.push({
+                name: AuthorNames[i],
+                type: AuthorTypes[i],
+                status: AuthorStatuses[i]
+            });
+        }
+        
+        // Combine Author names, types, and statuses into a single array with comma-separated values
+        var AuthorsDataString = [];
+        for (var i = 0; i < AuthorsData.length; i++) {
+            AuthorsDataString.push(AuthorsData[i].name + ", " + AuthorsData[i].type + ", " + AuthorsData[i].status);
+        }
+    
     var data={
         "Title":Title,
-        "Authors":AuthorsData,
+        "Authors":AuthorsDataString,
         "Journal":Journal,
         "Volume":Volume,
         "Pages":Pages,
@@ -161,12 +174,80 @@ app.post("/sign_upp1",upload.single('file'), (req,res)=>{
 })
 
 
-app.get("/",(req,res)=>{
-    res.set({
-        "Allow-access-Allow-Origin":'*'
-    })
-    res.render('index')
-    return res.redirect('index.html')
-}).listen(3000);
+app.post("/you", upload.single('file'), (req, res) => {
+    const customerId = req.body.customerId;
+    console.log(customerId)
 
-console.log("Listening on port")
+    var Title = req.body.Title;
+    var Authors = req.body.Authors;
+    var Journal = req.body.Journal;
+    var Volume = req.body.Volume;
+    var Pages = req.body.Pages;
+    var BookTitle = req.body.BookTitle;
+    var Organization = req.body.Organization;
+    var Publishers = req.body.Publishers;
+    var Number = req.body.Number;
+    var Year = req.body.Year;
+
+    var AuthorNames = req.body.Authors;
+    var AuthorTypes = req.body.authorType;
+    var AuthorStatuses = req.body.authorStatus;
+
+    // Combine Author names, types, and statuses into an array of objects
+        // Combine Author names, types, and statuses into an array of objects
+        var AuthorsData = [];
+        for (var i = 0; i < AuthorNames.length; i++) {
+            AuthorsData.push({
+                name: AuthorNames[i],
+                type: AuthorTypes[i],
+                status: AuthorStatuses[i]
+            });
+        }
+        
+        // Combine Author names, types, and statuses into a single array with comma-separated values
+        var AuthorsDataString = [];
+        for (var i = 0; i < AuthorsData.length; i++) {
+            AuthorsDataString.push(AuthorsData[i].name + ", " + AuthorsData[i].type + ", " + AuthorsData[i].status);
+        }
+    var data = {
+        "Title": Title,
+        "Authors": AuthorsDataString,
+        "Journal": Journal,
+        "Volume": Volume,
+        "Pages": Pages,
+        "BookTitle": BookTitle,
+        "Organization": Organization,
+        "Publisher": Publishers,
+        "Number": Number,
+        "Year": Year
+    };
+
+    // Update the existing record in the 'users' collection
+    db.collection('users').updateOne({ _id: new ObjectId(customerId) }, { $set: data }, (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send("Internal Server Error");
+        }
+        console.log("Record updated successfully");
+        res.redirect("/"); // Redirect to home page or other page
+    });
+});
+
+// app.get("/",(req,res)=>{
+//     res.set({
+//         "Allow-access-Allow-Origin":'*'
+//     })
+//     res.render('index1')
+//     return res.redirect('index1.html')
+// });
+
+// console.log("Listening on port")
+
+
+
+
+
+
+app.listen(port, () =>{
+    console.log(`App listening on port ${port}`)
+})

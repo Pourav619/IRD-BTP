@@ -1,0 +1,100 @@
+<div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+<h1 class="h2">Dashboard</h1>
+
+<div class="btn-toolbar md-2 mb-md 0">
+    <div class="btn-group me-2">
+        <a href="/add" class = "btn btn-sm btn-outline-secondary">+ New Paper</a>
+    </div>
+</div>
+</div>
+
+<!-- <%= messages %> -->
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>Title</th>
+            <th>Authors</th>
+            <th>Journal</th>
+            <th>Year</th>
+            <th>Publisher</th>
+            <th>Number</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(var i = customers.length - 1; i >= 0; i--) { %>
+            <tr>
+                <td><%= customers[i].Title %></td>
+                <td>
+                    <%= customers[i].Authors.join(":::")%>
+                    
+                </td>
+                <!-- <td><%= customers[i].Authors.length%></td> -->
+                <td><%= customers[i].Journal %></td>
+                <td><%= customers[i].Year %></td>
+                <td><%= customers[i].Publisher %></td>
+                <td><%= customers[i].Number %></td>
+                <td class="text-end">
+                    <!-- <a href="/update-user?id=<%= customers[i]._id%>" class="btn border-shadow update">
+                        <span class="text-gradient"><i class="fas fa-pencil-alt"></i></span>
+                    </a>
+                    <a class="btn border-shadow delete" data-id=<%= customers[i]._id%> >
+                        <span class="text-gradient"><i class="fas fa-times"></i></span>
+                    </a> -->
+                    <div class="d-flex flex-row justify-content-end gap-2">
+                        <a href="/view/<%= customers[i]._id %>" type="button" class = "btn btn-primary btn-small">
+                        <i class="bi bi-eye"></i></a>
+
+                        <a href="/edit/<%= customers[i]._id %>" type="button" class = "btn btn-warning btn-small">
+                            <i class="bi bi-pencil"></i></a>
+                        
+                        <form action="/edit/<%= customers[i]._id %>?_method=DELETE" method="POST" class="position-relative">
+                        <button type="submit" class="btn btn-danger btn-small">
+                            <i class="bi bi-person-x"></i>
+                        </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        <% } %>
+        
+    </tbody>
+</table>
+
+
+<% if (customers.length > 0) { %>
+    <nav aria-label="Dashboard Pagination">
+      <ul class="pagination justify-content-center mt-5">
+  
+        <% if (current == 1) { %>
+          <li class="page-item disabled"><a href="#" class="page-link">First</a></li>
+        <% } else { %>
+          <li class="page-item"><a href="/?page=1" class="page-link">First</a></li>
+        <% } %>
+  
+        <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+        <% if(i !== 1) { %>
+          <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+        <% } %>
+  
+        <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %>
+          <% if (i == current) { %>
+            <li class="page-item disabled"><a href="#" class="page-link"><%= i %></a></li>
+          <% } else { %>
+            <li class="page-item"><a href="/?page=<%= i %>" class="page-link"><%= i %></a></li>
+          <% } %>
+          <% if (i == Number(current) + 4 && i < pages) { %>
+            <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+          <% } %>
+        <% } %>
+  
+        <% if (current == pages) { %>
+          <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
+        <% } else { %>
+          <li class="page-item"><a href="/?page=<%= pages %>" class="page-link">Last</a></li>
+        <% } %>
+  
+      </ul>
+    </nav>
+  <% } %>
