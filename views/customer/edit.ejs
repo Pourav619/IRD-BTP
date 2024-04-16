@@ -115,6 +115,37 @@
         .publisher-input button:hover {
             background-color: #d32f2f;
         }
+
+
+
+
+
+        .author-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group select {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.label, .author, .author-type, .author-status {
+    margin-bottom: 10px;
+}
+
+.input-group:nth-child(2) {
+    display: flex;
+    align-items: center;
+}
+
+.input-group:nth-child(2) label {
+    margin-right: 10px;
+}
     </style>
 </head>
 
@@ -130,17 +161,20 @@
             <div id="authorsContainer">
                 <!-- Three author input fields by default -->
                 <div class="author-input">
-                    <input type="text" class="author" name="Authors[]" placeholder="Author name" value="<%= customer.Authors %>">
-                    <select name="authorType[]" class="author-type" value="<%= customer.Authors[1] %>">
-                        <option value="Student">Student</option>
-                        <option value="Professor">Professor</option>
-                        <option value="Researcher">Researcher</option>
+                    <input type="text" class="author" name="Authors[]" placeholder="Author name">
+                    <label for="Type">Type</label>
+                    <select name="authorType[]" class="author-type">
+                        <option value="UG">UG</option>
+                        <option value="PG">PG</option>
+                        <option value="Faculty(IIITD)">Faculty(IIITD)</option>
+                        <option value="Faculty(Outside)">Faculty(Outside)</option>
                     </select>
-                    <select name="authorStatus[]" class="author-status" value="<%= customer.Authors[2] %>">
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                        <option value="Pending">Pending</option>
+                    <label for="Affiliation">Affiliation</label>
+                    <select name="authorStatus[]" class="author-status">
+                        <option value="IIITD">IIITD</option>
+                        <option value="Other">Other</option>
                     </select>
+                    <input type="text" id="aOther" name="aOther" placeholder="Fill College if Affiliation selected Other">
                     <button type="button" class="remove-author" disabled>-</button>
                 </div>
                 
@@ -201,16 +235,19 @@
                 authorInput.classList.add("author-input");
                 authorInput.innerHTML = `
                     <input type="text" class="author" name="Authors[]" placeholder="Author name">
+                    <label for="Type">Type</label>
                     <select name="authorType[]" class="author-type">
-                        <option value="Student">Student</option>
-                        <option value="Professor">Professor</option>
-                        <option value="Researcher">Researcher</option>
+                        <option value="UG">UG</option>
+                        <option value="PG">PG</option>
+                        <option value="Faculty(IIITD)">Faculty(IIITD)</option>
+                        <option value="Faculty(Outside)">Faculty(Outside)</option>
                     </select>
+                    <label for="Affiliation">Affiliation</label>
                     <select name="authorStatus[]" class="author-status">
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                        <option value="Pending">Pending</option>
+                        <option value="IIITD">IIITD</option>
+                        <option value="Other">Other</option>
                     </select>
+                    <input type="text" id="aOther" name="aOther" placeholder="Fill College if Affiliation selected Other">
                     <button type="button" class="remove-author">-</button>
                 `;
                 authorsContainer.appendChild(authorInput);
@@ -225,13 +262,6 @@
                         });
                     }
                 });
-
-                // // Enable remove buttons if there are more than one author input fields
-                // if (removeAuthorButtons.length === 1) {
-                //     removeAuthorButtons.forEach(button => {
-                //         button.removeAttribute("disabled");
-                //     });
-                // }
             });
 
             
@@ -311,11 +341,6 @@ addPublisherInputs();
 const addPublisherButton = document.getElementById("addPublisher");
 const removePublisherButtons = document.querySelectorAll(".remove-publisher");
 
-// addPublisherButton.addEventListener("click", function () {
-//     const publishersContainer = document.getElementById("publishersContainer");
-//     const publisherInput = createPublisherInput();
-//     publishersContainer.appendChild(publisherInput);
-// });
 
 
 // Call the function to add publisher inputs
@@ -340,33 +365,34 @@ const addAuthorButton = document.getElementById("addAuthor");
         // Clear existing author inputs
         authorsContainer.innerHTML = '';
 
-        for (let i = 0; i < fetchedAuthors.length; i += 3) {
+        for (let i = 0; i < fetchedAuthors.length; i += 4) {
             const authorName = fetchedAuthors[i].trim();
             const authorType = fetchedAuthors[i + 1].trim();
             const authorStatus = fetchedAuthors[i + 2].trim();
-
-            const authorInput = createAuthorInput(authorName, authorType, authorStatus);
+            const authorOther = fetchedAuthors[i+3].trim();
+            const authorInput = createAuthorInput(authorName, authorType, authorStatus, authorOther);
             authorsContainer.appendChild(authorInput);
         }
     }
 
 
  // Function to create an author input field
- function createAuthorInput(authorName = '', authorType = 'Student', authorStatus = 'Active') {
+ function createAuthorInput(authorName = '', authorType = 'Student', authorStatus = 'Active',authorOther = undefined) {
         const authorInput = document.createElement("div");
         authorInput.classList.add("author-input");
         authorInput.innerHTML = `
             <input type="text" class="author" name="Authors[]" placeholder="Author name" value="${authorName}">
             <select name="authorType[]" class="author-type">
-                <option value="Student" ${authorType === 'Student' ? 'selected' : ''}>Student</option>
-                <option value="Professor" ${authorType === 'Professor' ? 'selected' : ''}>Professor</option>
-                <option value="Researcher" ${authorType === 'Researcher' ? 'selected' : ''}>Researcher</option>
+                <option value="UG" ${authorType === 'UG' ? 'selected' : ''}>UG</option>
+                <option value="PG" ${authorType === 'PG' ? 'selected' : ''}>PG</option>
+                <option value="Faculty(IIITD)" ${authorType === 'Faculty(IIITD)' ? 'selected' : ''}>Faculty(IIITD)</option>
+                <option value="Faculty(Outside)" ${authorType === 'Faculty(Outside)' ? 'selected' : ''}>Faculty(Outside)</option>
             </select>
             <select name="authorStatus[]" class="author-status">
-                <option value="Active" ${authorStatus === 'Active' ? 'selected' : ''}>Active</option>
-                <option value="Inactive" ${authorStatus === 'Inactive' ? 'selected' : ''}>Inactive</option>
-                <option value="Pending" ${authorStatus === 'Pending' ? 'selected' : ''}>Pending</option>
+                <option value="IIITD" ${authorStatus === 'IIITD' ? 'selected' : ''}>IIITD</option>
+                <option value="Other" ${authorStatus === 'Other' ? 'selected' : ''}>Other</option>
             </select>
+            <input type="text" id="aOther" name="aOther" placeholder="Fill College if Affiliation selected Other" value="${authorOther}">
             <button type="button" class="remove-author">-</button>
         `;
 
@@ -390,13 +416,6 @@ const addAuthorButton = document.getElementById("addAuthor");
 
     // Call the function to add author inputs
     addAuthorInputs();
-
-    // addAuthorButton.addEventListener("click", function () {
-    //     const authorsContainer = document.getElementById("authorsContainer");
-    //     const authorInput = createAuthorInput();
-    //     authorsContainer.appendChild(authorInput);
-    // });
-
 
     </script>
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

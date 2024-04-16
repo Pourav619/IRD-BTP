@@ -133,6 +133,7 @@ app.post("/sign_upp1",upload.single('file'), (req,res)=>{
     var AuthorNames = req.body.Authors;
     var AuthorTypes = req.body.authorType;
     var AuthorStatuses = req.body.authorStatus;
+    var AuthorOther = req.body.aOther;
 
     // Combine Author names, types, and statuses into an array of objects
         // Combine Author names, types, and statuses into an array of objects
@@ -141,14 +142,15 @@ app.post("/sign_upp1",upload.single('file'), (req,res)=>{
             AuthorsData.push({
                 name: AuthorNames[i],
                 type: AuthorTypes[i],
-                status: AuthorStatuses[i]
+                status: AuthorStatuses[i],
+                aOther: AuthorOther[i]
             });
         }
         
         // Combine Author names, types, and statuses into a single array with comma-separated values
         var AuthorsDataString = [];
         for (var i = 0; i < AuthorsData.length; i++) {
-            AuthorsDataString.push(AuthorsData[i].name + ", " + AuthorsData[i].type + ", " + AuthorsData[i].status);
+            AuthorsDataString.push(AuthorsData[i].name + ", " + AuthorsData[i].type + ", " + AuthorsData[i].status + ", " +AuthorsData[i].aOther);
         }
     
     var data={
@@ -192,6 +194,8 @@ app.post("/you", upload.single('file'), (req, res) => {
     var AuthorNames = req.body.Authors;
     var AuthorTypes = req.body.authorType;
     var AuthorStatuses = req.body.authorStatus;
+    var AuthorOther = req.body.aOther;
+
 
     // Combine Author names, types, and statuses into an array of objects
         // Combine Author names, types, and statuses into an array of objects
@@ -200,14 +204,16 @@ app.post("/you", upload.single('file'), (req, res) => {
             AuthorsData.push({
                 name: AuthorNames[i],
                 type: AuthorTypes[i],
-                status: AuthorStatuses[i]
+                status: AuthorStatuses[i],
+                aOther: AuthorOther[i]
+                
             });
         }
         
         // Combine Author names, types, and statuses into a single array with comma-separated values
         var AuthorsDataString = [];
         for (var i = 0; i < AuthorsData.length; i++) {
-            AuthorsDataString.push(AuthorsData[i].name + ", " + AuthorsData[i].type + ", " + AuthorsData[i].status);
+            AuthorsDataString.push(AuthorsData[i].name + ", " + AuthorsData[i].type + ", " + AuthorsData[i].status  + ", " +AuthorsData[i].aOther);
         }
     var data = {
         "Title": Title,

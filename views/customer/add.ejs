@@ -114,6 +114,35 @@
         .publisher-input button:hover {
             background-color: #d32f2f;
         }
+
+        .author-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group select {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.label, .author, .author-type, .author-status {
+    margin-bottom: 10px;
+}
+
+.input-group:nth-child(2) {
+    display: flex;
+    align-items: center;
+}
+
+.input-group:nth-child(2) label {
+    margin-right: 10px;
+}
+
+
     </style>
 </head>
 
@@ -137,19 +166,21 @@
                 <!-- Three author input fields by default -->
                 <div class="author-input">
                     <input type="text" class="author" name="Authors[]" placeholder="Author name">
+                    <label for="Type">Type</label>
                     <select name="authorType[]" class="author-type">
-                        <option value="Student">Student</option>
-                        <option value="Professor">Professor</option>
-                        <option value="Researcher">Researcher</option>
+                        <option value="UG">UG</option>
+                        <option value="PG">PG</option>
+                        <option value="Faculty(IIITD)">Faculty(IIITD)</option>
+                        <option value="Faculty(Outside)">Faculty(Outside)</option>
                     </select>
+                    <label for="Affiliation">Affiliation</label>
                     <select name="authorStatus[]" class="author-status">
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                        <option value="Pending">Pending</option>
+                        <option value="IIITD">IIITD</option>
+                        <option value="Other">Other</option>
                     </select>
+                    <input type="text" id="aOther" name="aOther" placeholder="Fill College if Affiliation selected Other">
                     <button type="button" class="remove-author" disabled>-</button>
                 </div>
-                
             </div>
 
             <!-- Button to add more authors -->
@@ -204,17 +235,20 @@
                 const authorInput = document.createElement("div");
                 authorInput.classList.add("author-input");
                 authorInput.innerHTML = `
-                    <input type="text" class="author" name="Authors[]" placeholder="Author name">
+                <input type="text" class="author" name="Authors[]" placeholder="Author name">
+                    <label for="Type">Type</label>
                     <select name="authorType[]" class="author-type">
-                        <option value="Student">Student</option>
-                        <option value="Professor">Professor</option>
-                        <option value="Researcher">Researcher</option>
+                        <option value="UG">UG</option>
+                        <option value="PG">PG</option>
+                        <option value="Faculty(IIITD)">Faculty(IIITD)</option>
+                        <option value="Faculty(Outside)">Faculty(Outside)</option>
                     </select>
+                    <label for="Affiliation">Affiliation</label>
                     <select name="authorStatus[]" class="author-status">
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                        <option value="Pending">Pending</option>
+                        <option value="IIITD">IIITD</option>
+                        <option value="Other">Other</option>
                     </select>
+                    <input type="text" id="aOther" name="aOther" placeholder="Fill College if Affiliation selected Other">
                     <button type="button" class="remove-author">-</button>
                 `;
                 authorsContainer.appendChild(authorInput);
