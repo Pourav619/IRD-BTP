@@ -4,7 +4,8 @@
 ## Description
 
 This project is a Research Paper Management System developed for the IRD department. The system allows users to upload, view, edit, and manage metadata for their research papers.
-[Poster_report](https://github.com/Pourav619/IRD-BTP/blob/main/Poster_BTP.pdf)
+
+- [Poster_report](https://github.com/Pourav619/IRD-BTP/blob/main/Poster_BTP.pdf)
 ## Technologies Used
 
 - Node.js
