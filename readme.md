@@ -1,5 +1,5 @@
 # IRD Research Paper Management System
-[Report of project](https://classroom.google.com/w/NTc1MDkwODc0Njg2/t/all)
+[Report of project](https://github.com/Pourav619/IRD-BTP/blob/main/Vickey_BTP_Report.pdf)
 
 ## Description
 
