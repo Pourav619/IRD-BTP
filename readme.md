@@ -82,7 +82,10 @@ To run this project locally on your machine, follow these steps:
 ### Codebase and Technology Upgrades
 
 - Upgrade form handling capabilities with frameworks like Formik for improved user interaction and data validation.
-
+### Team member
+vickey kumar 2021299 
+Pourav Surya 2021271
+Suyash kumar 2021293
 ## Contributions
 
 Contributions are welcome! Please fork the repository and submit a pull request for review.
