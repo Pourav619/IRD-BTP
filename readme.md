@@ -12,8 +12,8 @@ This project is a Research Paper Management System developed for the IRD departm
 
 ## System Requirements
 
-- Node.js
-- MongoDB
+- Node.js (version X.X.X or higher)
+- MongoDB (version X.X.X or higher)
 
 ## Installation
 
@@ -57,88 +57,29 @@ To run this project locally on your machine, follow these steps:
 
 ### Search Functionality
 
-- Users can search data in MongoDB using keywords related to the model used.
-
-## Backend Preprocessing
-
-### Description
-
-This part of the project handles the preprocessing of uploaded `citation.txt` files. It parses the essential data and converts it for storage in MongoDB.
-
-### Steps
-
-1. **Upload and Parse File**: The uploaded `citation.txt` file is read line by line to extract relevant metadata such as title, authors, journal, volume, pages, year, publisher, and number.
-2. **Data Conversion**: The extracted data is formatted into a structured JSON format. Authors' names are processed to include additional information.
-3. **Database Insertion**: The formatted data is then inserted into the MongoDB collection for further use.
-4. **ID Conversion**: The user ID in the documents is converted from a string to an `ObjectId` type for proper MongoDB querying.
-
-### Code Snippet
-
-Here is a brief example of how the preprocessing is implemented:
-
-```python
-import pymongo
-from bson import ObjectId
-import json
-
-# Load user information
-userobj = {}
-with open('username.json', 'r') as file:
-    userobj = json.load(file)
-
-user_id = userobj["_id"]
-
-# Read and parse the citation file
-with open("uploads/citations.txt", "r", encoding="mbcs") as my_file:
-    data = my_file.readlines()
-
-# Process the parsed data
-article_list = []
-# Code to parse the citations and convert them into a structured format
-
-def convert_data_corrected(data):
-    # Code to convert parsed data into JSON format suitable for MongoDB
-    pass
-
-# Insert data into MongoDB
-mongo_client = pymongo.MongoClient("mongodb://localhost:27017/")
-db = mongo_client["irdBtp"]
-collection = db["users"]
-for document in data:
-    collection.insert_one(document)
-
-# Convert userID from string to ObjectId
-for doc in collection.find({"userID": {"$exists": True, "$type": "string"}}):
-    if ObjectId.is_valid(doc['userID']):
-        new_id = ObjectId(doc['userID'])
-        collection.update_one({'_id': doc['_id']}, {'$set': {'userID': new_id}})
-
-
-```python
-
-
+- Users can search data in MongoDB using keywords related to the research paper's metadata.
 
 ## Future Plans
 
 ### Security Enhancements
 
-- Advanced Firewall Implementation
-- Enhanced Authentication with LDAP
-- Transition from FTPS to SFTP for secure file transfers
+- Implement advanced firewall rules to secure the application.
+- Enhance authentication with LDAP integration.
+- Transition from FTPS to SFTP for more secure file transfers.
 
 ### Deployment Strategy
 
-- Staged Deployment
-- Scalability Plans
+- Implement staged deployment strategies to minimize downtime.
+- Plan for scalability using containerization and cloud deployment options.
 
 ### DevOps Improvements
 
-- Expanded Testing Protocols
-- Enhanced Logging and Monitoring
+- Expand automated testing coverage with unit tests and integration tests.
+- Implement enhanced logging and monitoring for better visibility into system performance.
 
 ### Codebase and Technology Upgrades
 
-- Robust Form Handling with Django’s Forms and FormViews
+- Upgrade form handling capabilities with frameworks like Formik for improved user interaction and data validation.
 
 ## Contributions
 
