@@ -4,6 +4,7 @@
 ## Description
 
 This project is a Research Paper Management System developed for the IRD department. The system allows users to upload, view, edit, and manage metadata for their research papers.
+![image](https://github.com/Pourav619/IRD-BTP/assets/108173950/944f636f-10b0-4a60-a99c-49aa9580ae66)
 
 ## Technologies Used
 
